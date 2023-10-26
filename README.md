@@ -10,9 +10,9 @@ server was generated from design.go
 
 #### For starting/stopping app use:
 ```shell
-make start-cli
-make start
-male stop
+$ make start-cli
+$ make start
+$ male stop
 ```
 
 ##### ! Don't run it, only after changes in design.go you must run commands below:
