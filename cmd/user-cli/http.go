@@ -1,7 +1,7 @@
 package main
 
 import (
-	cli "UserService/gen/http/cli/user"
+	cli "UserApi/gen/http/cli/user"
 	"net/http"
 	"time"
 
