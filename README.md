@@ -3,8 +3,8 @@
 Goa crud user api
 
 ### Info
-Server was built on goa framework,
-it was generated from design.go
+App was built on goa framework + gorm,
+server was generated from design.go
 
 ### Installation
 
