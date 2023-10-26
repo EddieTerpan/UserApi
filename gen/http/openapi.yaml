@@ -1,0 +1,215 @@
+swagger: "2.0"
+info:
+    title: User Service
+    description: Service for User CRUD
+    version: ""
+host: localhost:8089
+consumes:
+    - application/json
+    - application/xml
+    - application/gob
+produces:
+    - application/json
+    - application/xml
+    - application/gob
+paths:
+    /auth/token:
+        post:
+            tags:
+                - user
+            summary: token user
+            operationId: user#token
+            parameters:
+                - name: TokenRequestBody
+                  in: body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/UserTokenRequestBody'
+            responses:
+                "200":
+                    description: OK response.
+                    schema:
+                        type: string
+            schemes:
+                - http
+    /user:
+        get:
+            tags:
+                - user
+            summary: read user
+            description: |4-
+                **Required security scopes for jwt**:
+                  * `api:access`
+            operationId: user#read
+            parameters:
+                - name: Authorization
+                  in: header
+                  description: JWT token
+                  required: false
+                  type: string
+            responses:
+                "200":
+                    description: OK response.
+                    schema:
+                        type: string
+            schemes:
+                - http
+            security:
+                - jwt_header_Authorization: []
+    /users/create:
+        post:
+            tags:
+                - user
+            summary: create user
+            operationId: user#create
+            parameters:
+                - name: CreateRequestBody
+                  in: body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/UserCreateRequestBody'
+            responses:
+                "200":
+                    description: OK response.
+                    schema:
+                        type: string
+            schemes:
+                - http
+    /users/delete:
+        delete:
+            tags:
+                - user
+            summary: delete user
+            description: |4-
+                **Required security scopes for jwt**:
+                  * `api:access`
+            operationId: user#delete
+            parameters:
+                - name: Authorization
+                  in: header
+                  description: JWT token
+                  required: false
+                  type: string
+                - name: DeleteRequestBody
+                  in: body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/UserDeleteRequestBody'
+            responses:
+                "200":
+                    description: OK response.
+                    schema:
+                        type: string
+            schemes:
+                - http
+            security:
+                - jwt_header_Authorization: []
+    /users/update:
+        put:
+            tags:
+                - user
+            summary: update user
+            description: |4-
+                **Required security scopes for jwt**:
+                  * `api:access`
+            operationId: user#update
+            parameters:
+                - name: Authorization
+                  in: header
+                  description: JWT token
+                  required: false
+                  type: string
+                - name: UpdateRequestBody
+                  in: body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/UserUpdateRequestBody'
+            responses:
+                "200":
+                    description: OK response.
+                    schema:
+                        type: string
+            schemes:
+                - http
+            security:
+                - jwt_header_Authorization: []
+definitions:
+    UserCreateRequestBody:
+        title: UserCreateRequestBody
+        type: object
+        properties:
+            email:
+                type: string
+                description: User's email address
+                example: meridamotore@gmail.com
+                pattern: ^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$
+            password:
+                type: string
+                description: User's password
+                example: MyP@ssw0rd
+        description: Create user
+        example:
+            email: meridamotore@gmail.com
+            password: MyP@ssw0rd
+    UserDeleteRequestBody:
+        title: UserDeleteRequestBody
+        type: object
+        properties:
+            id:
+                type: integer
+                description: Delete id
+                example: 4253356375356536129
+                format: int64
+        example:
+            id: 3859252082151081606
+    UserTokenRequestBody:
+        title: UserTokenRequestBody
+        type: object
+        properties:
+            email:
+                type: string
+                description: User's email address
+                example: meridamotore@gmail.com
+                pattern: ^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$
+            password:
+                type: string
+                description: User's password
+                example: MyP@ssw0rd
+        description: Get token
+        example:
+            email: meridamotore@gmail.com
+            password: MyP@ssw0rd
+    UserUpdateRequestBody:
+        title: UserUpdateRequestBody
+        type: object
+        properties:
+            address:
+                type: string
+                description: User address
+                example: Ipsam voluptatum.
+            name:
+                type: string
+                description: User name
+                example: Et quo enim.
+            phone:
+                type: string
+                description: phone
+                example: Sit nobis nobis.
+            surname:
+                type: string
+                description: User surname
+                example: Laboriosam perferendis non fugit ex voluptatem.
+        description: Create user
+        example:
+            address: Suscipit non odio vel.
+            name: Quos sint et natus.
+            phone: Consequatur ipsam quis.
+            surname: Voluptatem inventore molestiae ratione similique quis repudiandae.
+securityDefinitions:
+    jwt_header_Authorization:
+        type: apiKey
+        description: |4-
+            **Security Scopes**:
+              * `api:access`: api:access
+        name: Authorization
+        in: header
