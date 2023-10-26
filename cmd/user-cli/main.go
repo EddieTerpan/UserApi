@@ -5,11 +5,10 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	goa "goa.design/goa/v3/pkg"
 	"net/url"
 	"os"
 	"strings"
-
-	goa "goa.design/goa/v3/pkg"
 )
 
 func main() {

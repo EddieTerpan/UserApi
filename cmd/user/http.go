@@ -4,16 +4,15 @@ import (
 	usersvr "UserApi/gen/http/user/server"
 	user "UserApi/gen/user"
 	"context"
+	goahttp "goa.design/goa/v3/http"
+	httpmdlwr "goa.design/goa/v3/http/middleware"
+	"goa.design/goa/v3/middleware"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"sync"
 	"time"
-
-	goahttp "goa.design/goa/v3/http"
-	httpmdlwr "goa.design/goa/v3/http/middleware"
-	"goa.design/goa/v3/middleware"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
