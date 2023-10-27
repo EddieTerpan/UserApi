@@ -89,7 +89,7 @@ func main() {
 	switch *hostF {
 	case "localhost":
 		{
-			addr := "http://0.0.0.0:8088"
+			addr := os.Getenv("GOA_HOST_PORT")
 			u, err := url.Parse(addr)
 			if err != nil {
 				logger.Fatalf("invalid URL %#v: %s\n", addr, err)
@@ -113,7 +113,7 @@ func main() {
 		}
 
 	default:
-		logger.Fatalf("invalid host argument: %q (valid hosts: host)\n", *hostF)
+		logger.Fatalf("invalid host argument: %q (valid hosts: localhost)\n", *hostF)
 	}
 
 	// Wait for signal.
