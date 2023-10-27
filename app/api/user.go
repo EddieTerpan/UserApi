@@ -112,10 +112,12 @@ func (s *UserService) Read(ctx context.Context, p *user.ReadPayload) (res string
 // Update implements update.
 func (s *UserService) Update(ctx context.Context, p *user.UpdatePayload) (res string, err error) {
 	s.logger.Print("user.update")
-	res, err = gormMysqlUser.UpdateUser(ctx, s.gormDB, p)
+	userResult, err := gormMysqlUser.UpdateUser(ctx, s.gormDB, p)
 	if err != nil {
 		return "", err
 	}
+	resBson, _ := json.Marshal(&userResult)
+	res = string(resBson)
 
 	return
 }

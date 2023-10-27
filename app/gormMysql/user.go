@@ -11,7 +11,7 @@ import (
 type User struct {
 	ID       uint   `gorm:"primaryKey"`
 	Email    string `gorm:"type:varchar(100);unique_index;unique"`
-	Password string `gorm:"type:varchar(100)"`
+	Password string `gorm:"type:varchar(100)" json:"-"`
 	Name     string `gorm:"type:varchar(100)" json:"name"`
 	Surname  string `gorm:"type:varchar(100)" json:"surname"`
 	Phone    string `gorm:"type:varchar(100)" json:"phone"`
@@ -26,39 +26,34 @@ func CreateUser(ctx context.Context, db *gorm.DB, user *User) (*gorm.DB, error) 
 func GetUserByID(ctx context.Context, db *gorm.DB, id uint) (*User, error) {
 	var user User
 	result := db.WithContext(ctx).First(&user, id)
-	user.Password = "sensitive"
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return &user, nil
 }
 
-func UpdateUser(ctx context.Context, db *gorm.DB, p *user.UpdatePayload) (userStr string, err error) {
-	var user User
+func UpdateUser(ctx context.Context, db *gorm.DB, p *user.UpdatePayload) (user *User, err error) {
 	userID, ok := ctx.Value("userID").(float64)
 	if !ok {
-		return "", errors.New("user ID not found in the context")
+		return nil, errors.New("user ID not found in the context")
 	}
 	result := db.First(&user, uint(userID))
 	if result.Error != nil {
-		return "", result.Error
+		return nil, result.Error
 	}
 	bsonPayload, err := json.Marshal(p)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	if err := json.Unmarshal(bsonPayload, &user); err != nil {
-		return "", err
+		return nil, err
 	}
 	result = db.Save(&user)
-	user.Password = "sensitive"
 	if result.Error != nil {
-		return "", result.Error
+		return nil, result.Error
 	}
-	resBson, _ := json.Marshal(&user)
-	userStr = string(resBson)
 
-	return userStr, nil
+	return user, nil
 }
 
 func DeleteUser(ctx context.Context, db *gorm.DB, id *uint) error {
