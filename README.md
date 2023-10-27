@@ -13,7 +13,7 @@ server was generated from design.go
 
 #### For starting/stopping app use:
 ```shell
-$ make start-cli
+$ make start-dev
 $ make start
 $ male stop
 ```
