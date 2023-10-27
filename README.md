@@ -6,6 +6,9 @@ Goa crud user api
 App was built on goa framework + gorm,
 server was generated from design.go
 
+### Api documentation
+{domain}/openapi3.json
+
 ### Installation
 
 #### For starting/stopping app use:

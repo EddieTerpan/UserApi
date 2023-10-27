@@ -3,7 +3,7 @@ info:
     title: User Service
     description: Service for User CRUD
     version: ""
-host: localhost:8089
+host: 0.0.0.0:8088
 consumes:
     - application/json
     - application/xml
@@ -32,6 +32,19 @@ paths:
                         type: string
             schemes:
                 - http
+    /openapi3.json:
+        get:
+            tags:
+                - user
+            summary: Download ./gen/http/openapi3.json
+            operationId: user#/openapi3.json
+            responses:
+                "200":
+                    description: File downloaded
+                    schema:
+                        type: file
+            schemes:
+                - http
     /user:
         get:
             tags:
@@ -56,7 +69,7 @@ paths:
                 - http
             security:
                 - jwt_header_Authorization: []
-    /users/create:
+    /user/create:
         post:
             tags:
                 - user
@@ -75,7 +88,7 @@ paths:
                         type: string
             schemes:
                 - http
-    /users/delete:
+    /user/delete:
         delete:
             tags:
                 - user
@@ -104,7 +117,7 @@ paths:
                 - http
             security:
                 - jwt_header_Authorization: []
-    /users/update:
+    /user/update:
         put:
             tags:
                 - user

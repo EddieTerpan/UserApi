@@ -9,7 +9,7 @@ package client
 
 // CreateUserPath returns the URL path to the user service create HTTP endpoint.
 func CreateUserPath() string {
-	return "/users/create"
+	return "/user/create"
 }
 
 // ReadUserPath returns the URL path to the user service read HTTP endpoint.
@@ -19,12 +19,12 @@ func ReadUserPath() string {
 
 // UpdateUserPath returns the URL path to the user service update HTTP endpoint.
 func UpdateUserPath() string {
-	return "/users/update"
+	return "/user/update"
 }
 
 // DeleteUserPath returns the URL path to the user service delete HTTP endpoint.
 func DeleteUserPath() string {
-	return "/users/delete"
+	return "/user/delete"
 }
 
 // TokenUserPath returns the URL path to the user service token HTTP endpoint.

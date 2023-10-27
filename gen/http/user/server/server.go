@@ -18,12 +18,13 @@ import (
 
 // Server lists the user service endpoint HTTP handlers.
 type Server struct {
-	Mounts []*MountPoint
-	Create http.Handler
-	Read   http.Handler
-	Update http.Handler
-	Delete http.Handler
-	Token  http.Handler
+	Mounts              []*MountPoint
+	Create              http.Handler
+	Read                http.Handler
+	Update              http.Handler
+	Delete              http.Handler
+	Token               http.Handler
+	GenHTTPOpenapi3JSON http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -50,20 +51,26 @@ func New(
 	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
 	errhandler func(context.Context, http.ResponseWriter, error),
 	formatter func(ctx context.Context, err error) goahttp.Statuser,
+	fileSystemGenHTTPOpenapi3JSON http.FileSystem,
 ) *Server {
+	if fileSystemGenHTTPOpenapi3JSON == nil {
+		fileSystemGenHTTPOpenapi3JSON = http.Dir(".")
+	}
 	return &Server{
 		Mounts: []*MountPoint{
-			{"Create", "POST", "/users/create"},
+			{"Create", "POST", "/user/create"},
 			{"Read", "GET", "/user"},
-			{"Update", "PUT", "/users/update"},
-			{"Delete", "DELETE", "/users/delete"},
+			{"Update", "PUT", "/user/update"},
+			{"Delete", "DELETE", "/user/delete"},
 			{"Token", "POST", "/auth/token"},
+			{"./gen/http/openapi3.json", "GET", "/openapi3.json"},
 		},
-		Create: NewCreateHandler(e.Create, mux, decoder, encoder, errhandler, formatter),
-		Read:   NewReadHandler(e.Read, mux, decoder, encoder, errhandler, formatter),
-		Update: NewUpdateHandler(e.Update, mux, decoder, encoder, errhandler, formatter),
-		Delete: NewDeleteHandler(e.Delete, mux, decoder, encoder, errhandler, formatter),
-		Token:  NewTokenHandler(e.Token, mux, decoder, encoder, errhandler, formatter),
+		Create:              NewCreateHandler(e.Create, mux, decoder, encoder, errhandler, formatter),
+		Read:                NewReadHandler(e.Read, mux, decoder, encoder, errhandler, formatter),
+		Update:              NewUpdateHandler(e.Update, mux, decoder, encoder, errhandler, formatter),
+		Delete:              NewDeleteHandler(e.Delete, mux, decoder, encoder, errhandler, formatter),
+		Token:               NewTokenHandler(e.Token, mux, decoder, encoder, errhandler, formatter),
+		GenHTTPOpenapi3JSON: http.FileServer(fileSystemGenHTTPOpenapi3JSON),
 	}
 }
 
@@ -89,6 +96,7 @@ func Mount(mux goahttp.Muxer, h *Server) {
 	MountUpdateHandler(mux, h.Update)
 	MountDeleteHandler(mux, h.Delete)
 	MountTokenHandler(mux, h.Token)
+	MountGenHTTPOpenapi3JSON(mux, goahttp.Replace("", "/./gen/http/openapi3.json", h.GenHTTPOpenapi3JSON))
 }
 
 // Mount configures the mux to serve the user endpoints.
@@ -105,7 +113,7 @@ func MountCreateHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("POST", "/users/create", f)
+	mux.Handle("POST", "/user/create", f)
 }
 
 // NewCreateHandler creates a HTTP handler which loads the HTTP request and
@@ -207,7 +215,7 @@ func MountUpdateHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("PUT", "/users/update", f)
+	mux.Handle("PUT", "/user/update", f)
 }
 
 // NewUpdateHandler creates a HTTP handler which loads the HTTP request and
@@ -258,7 +266,7 @@ func MountDeleteHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("DELETE", "/users/delete", f)
+	mux.Handle("DELETE", "/user/delete", f)
 }
 
 // NewDeleteHandler creates a HTTP handler which loads the HTTP request and
@@ -349,4 +357,10 @@ func NewTokenHandler(
 			errhandler(ctx, w, err)
 		}
 	})
+}
+
+// MountGenHTTPOpenapi3JSON configures the mux to serve GET request made to
+// "/openapi3.json".
+func MountGenHTTPOpenapi3JSON(mux goahttp.Muxer, h http.Handler) {
+	mux.Handle("GET", "/openapi3.json", h.ServeHTTP)
 }

@@ -51,7 +51,7 @@ var _ = Service("user", func() {
 		HTTP(func() {
 			// Requests to the service consist of HTTP GET requests
 			// The payload fields are encoded as path parameters
-			POST("users/create")
+			POST("user/create")
 			// Responses use a "200 OK" HTTP status
 			// The result is encoded in the response body
 			Response(func() {
@@ -95,7 +95,7 @@ var _ = Service("user", func() {
 		})
 		Result(String)
 		HTTP(func() {
-			PUT("users/update")
+			PUT("user/update")
 			Response(func() {
 				Code(StatusOK)
 				Headers(func() {
@@ -114,7 +114,7 @@ var _ = Service("user", func() {
 		})
 		Result(String)
 		HTTP(func() {
-			DELETE("users/delete")
+			DELETE("user/delete")
 			Response(func() {
 				Code(StatusOK)
 				Headers(func() {
@@ -142,6 +142,7 @@ var _ = Service("user", func() {
 			})
 		})
 	})
+	Files("/openapi3.json", "./gen/http/openapi3.json")
 })
 var User = ResultType("application/vnd.goa.user", func() {
 	Attributes(func() {

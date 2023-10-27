@@ -21,13 +21,13 @@ func main() {
 	// load .env file
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatalf("error loading .env file")
+		log.Fatalf("Error loading .env file")
 	}
-	gormDB := db.Initialize()
 
+	gormDB := db.Initialize()
 	defer func() {
-		mysqlDb, _ := gormDB.DB()
-		err := mysqlDb.Close()
+		db, _ := gormDB.DB()
+		err := db.Close()
 		if err != nil {
 			fmt.Print(err.Error())
 			return
@@ -89,7 +89,7 @@ func main() {
 	switch *hostF {
 	case "localhost":
 		{
-			addr := os.Getenv("GOA_HOST_PORT")
+			addr := "http://0.0.0.0:8088"
 			u, err := url.Parse(addr)
 			if err != nil {
 				logger.Fatalf("invalid URL %#v: %s\n", addr, err)
@@ -113,7 +113,7 @@ func main() {
 		}
 
 	default:
-		logger.Fatalf("invalid host argument: %q (valid hosts: localhost)\n", *hostF)
+		logger.Fatalf("invalid host argument: %q (valid hosts: host)\n", *hostF)
 	}
 
 	// Wait for signal.
