@@ -24,12 +24,12 @@ func CreateUser(ctx context.Context, db *gorm.DB, user *User) (*gorm.DB, error) 
 }
 
 func GetUserByID(ctx context.Context, db *gorm.DB, id uint) (*User, error) {
-	var user User
-	result := db.WithContext(ctx).First(&user, id)
+	var userObj User
+	result := db.WithContext(ctx).First(&userObj, id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	return &user, nil
+	return &userObj, nil
 }
 
 func UpdateUser(ctx context.Context, db *gorm.DB, p *user.UpdatePayload) (user *User, err error) {
