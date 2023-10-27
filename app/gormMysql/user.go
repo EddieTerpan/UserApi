@@ -10,8 +10,8 @@ import (
 
 type User struct {
 	ID       uint   `gorm:"primaryKey"`
-	Email    string `gorm:"type:varchar(100);unique_index;unique" json:"email"`
-	Password string `gorm:"type:varchar(100)" json:"password"`
+	Email    string `gorm:"type:varchar(100);unique_index;unique"`
+	Password string `gorm:"type:varchar(100)"`
 	Name     string `gorm:"type:varchar(100)" json:"name"`
 	Surname  string `gorm:"type:varchar(100)" json:"surname"`
 	Phone    string `gorm:"type:varchar(100)" json:"phone"`
@@ -40,7 +40,6 @@ func UpdateUser(ctx context.Context, db *gorm.DB, p *user.UpdatePayload) (userSt
 		return "", errors.New("user ID not found in the context")
 	}
 	result := db.First(&user, uint(userID))
-	user.Password = "sensitive"
 	if result.Error != nil {
 		return "", result.Error
 	}
@@ -52,6 +51,7 @@ func UpdateUser(ctx context.Context, db *gorm.DB, p *user.UpdatePayload) (userSt
 		return "", err
 	}
 	result = db.Save(&user)
+	user.Password = "sensitive"
 	if result.Error != nil {
 		return "", result.Error
 	}

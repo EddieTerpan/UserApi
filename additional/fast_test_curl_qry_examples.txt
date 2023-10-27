@@ -1,21 +1,10 @@
-Firstly you need create a user:
+curl --location 'http://localhost:8088/openapi3.json'
 
-curl --location 'http://localhost:8088/users/create' \
+curl --location 'http://localhost:8088/user/create' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "email": "meridamotore@gmail.com",
     "password": "MyP@ssw0rd"
-}'
-
----
-
-curl --location --request PUT 'http://localhost:8088/users/update' \
---header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTExLTAyVDE0OjE4OjE1LjIwMzIzOSswNDowMCIsInVzZXJJZCI6MX0.OZ_w5rZhTgtLgnnEZksCFfeltQ5jwNwIXCQ45Xhm3w8' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "name": "Eduard",
-    "surname": "Terpan@",
-    "address": "Staroporto 4"
 }'
 
 curl --location 'http://localhost:8088/auth/token' \
@@ -26,4 +15,13 @@ curl --location 'http://localhost:8088/auth/token' \
 }'
 
 curl --location 'http://localhost:8088/user' \
---header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTExLTAyVDE0OjE4OjE1LjIwMzIzOSswNDowMCIsInVzZXJJZCI6MX0.OZ_w5rZhTgtLgnnEZksCFfeltQ5jwNwIXCQ45Xhm3w8'
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTExLTAzVDE0OjE0OjQ2LjY4NjIxNTE4M1oiLCJ1c2VySWQiOjF9.wLWcakQT_3POYfhb7tA3XdEVe-eOXtC4blbUsrcVWg0'
+
+curl --location --request PUT 'http://localhost:8088/user/update' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTExLTAzVDE0OjE0OjQ2LjY4NjIxNTE4M1oiLCJ1c2VySWQiOjF9.wLWcakQT_3POYfhb7tA3XdEVe-eOXtC4blbUsrcVWg0' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "Eduard",
+    "surname": "Terpan@",
+    "address": "Staroporto 4"
+}'

@@ -7,31 +7,31 @@
 	},
 	"item": [
 		{
-			"name": "http://localhost:8088/users/update",
+			"name": "http://localhost:8088/user/update",
 			"request": {
 				"method": "PUT",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTExLTAyVDE0OjE4OjE1LjIwMzIzOSswNDowMCIsInVzZXJJZCI6MX0.OZ_w5rZhTgtLgnnEZksCFfeltQ5jwNwIXCQ45Xhm3w8",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTExLTAzVDEzOjU0OjUyLjU3NjY5MDA4NFoiLCJ1c2VySWQiOjF9.9aqrvbwyu25v5c7noQQZDPOyJ3wvwdU8KWj7xwqybrw",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"Eduard\",\n    \"surname\": \"Terpan@\",\n    \"address\": \"Staroporto 2\"\n}",
+					"raw": "{\n    \"name\": \"Eduard\",\n    \"surname\": \"Terpan@\",\n    \"address\": \"Staroporto 4\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "http://localhost:8088/users/update"
+				"url": "http://localhost:8088/user/update"
 			},
 			"response": []
 		},
 		{
-			"name": "http://localhost:8088/users/create",
+			"name": "http://localhost:8088/user/create",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -55,7 +55,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"meridamotore2@gmail.com\",\n    \"password\": \"MyP@ssw0rd\"\n}",
+					"raw": "{\n    \"email\": \"meridamotore@gmail.com\",\n    \"password\": \"MyP@ssw0rd\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -73,7 +73,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTExLTAyVDE0OjE4OjE1LjIwMzIzOSswNDowMCIsInVzZXJJZCI6MX0.OZ_w5rZhTgtLgnnEZksCFfeltQ5jwNwIXCQ45Xhm3w8",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIyMDIzLTExLTAzVDEzOjU0OjUyLjU3NjY5MDA4NFoiLCJ1c2VySWQiOjF9.9aqrvbwyu25v5c7noQQZDPOyJ3wvwdU8KWj7xwqybrw",
 						"type": "default"
 					}
 				],
