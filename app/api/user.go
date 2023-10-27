@@ -34,43 +34,40 @@ func (s *UserService) JWTAuth(ctx context.Context, token string, scheme *securit
 	if token == "" {
 		return ctx, goa.PermanentError("unauthorized", "invalid token")
 	}
-	scheme2 := scheme.Validate(scheme.Scopes)
-	if scheme2 != nil {
-		return ctx, goa.PermanentError("unauthorized", scheme2.Error())
+	err := scheme.Validate(scheme.Scopes)
+	if err != nil {
+		return ctx, goa.PermanentError("unauthorized", err.Error())
 	}
 	// Parse and validate the JWT token
-	tokenParsed, _ := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+	tokenParsed, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return ctx, goa.PermanentError("unauthorized", "invalid token")
 		}
 		return []byte(os.Getenv("GOA_JWT_SECRET")), nil
 	})
-
+	if err != nil {
+		return ctx, goa.PermanentError("token parse error: ", err.Error())
+	}
 	if !tokenParsed.Valid {
 		return ctx, goa.PermanentError("unauthorized", "invalid token")
 	}
-
 	// The token is valid, so you can extract claims from the token if needed.
 	claims, ok := tokenParsed.Claims.(jwt.MapClaims)
 	_, okExpClaim := claims["exp"]
 	_, okUserIdClaim := claims["userId"]
 
 	if !(ok && okExpClaim && okUserIdClaim) {
-		return ctx, goa.PermanentError("unauthorized", "invalid token claims")
+		return ctx, goa.PermanentError("unauthorized", "empty token claims")
 	}
-
 	// Store the user ID in the context
 	ctx = context.WithValue(ctx, "userID", claims["userId"])
-
 	timeExp, expParsed := time.Parse(time.RFC3339, claims["exp"].(string))
 	if expParsed == nil && timeExp.Before(time.Now()) {
 		return ctx, goa.PermanentError("unauthorized", "expired token")
 	}
-
 	if int(claims["userId"].(float64)) <= 0 {
 		return ctx, goa.PermanentError("unauthorized", "invalid user")
 	}
-
 	if tokenParsed.Valid {
 		return ctx, nil
 	}
@@ -100,13 +97,12 @@ func (s *UserService) Read(ctx context.Context, p *user.ReadPayload) (res string
 	// Retrieve the user ID from the context
 	userID, ok := ctx.Value("userID").(float64)
 	if !ok {
-		return "", errors.New("User ID not found in the context")
+		return "", errors.New("user ID not found in the context")
 	}
 	foundedUser, err := gormMysqlUser.GetUserByID(ctx, s.gormDB, uint(userID))
 	if err != nil {
 		return "", err
 	}
-
 	resBson, _ := json.Marshal(foundedUser)
 	res = string(resBson)
 
@@ -135,32 +131,27 @@ func (s *UserService) Delete(ctx context.Context, p *user.DeletePayload) (res st
 // Token implements token.
 // https://self-issued.info/docs/draft-ietf-oauth-json-web-token.html
 func (s *UserService) Token(ctx context.Context, p *user.TokenPayload) (res string, err error) {
-
 	s.logger.Print("user.token")
 	verifyPwdErr := verifyPassword(*p.Password)
 	if verifyPwdErr != nil {
 		return "", verifyPwdErr
 	}
-
 	userCheck, err := gormMysqlUser.GetUserByEmail(ctx, s.gormDB, *p.Email)
 	if err != nil {
 		return "", errors.New("email not found")
 	}
-
 	if checkPasswordHash(*p.Password, userCheck.Password) {
 		return "", errors.New("invalid password")
 	}
-
 	// Create the JWT token
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["userId"] = userCheck.ID
 	claims["exp"] = time.Now().Add(time.Hour * 24 * 7)
-
 	// Sign the token
 	tokenString, err := token.SignedString([]byte(os.Getenv("GOA_JWT_SECRET"))) // Replace with your secret key
 	if err != nil {
-		return "", errors.New("SignedString error")
+		return "", errors.New("signedString error")
 	}
 
 	return "Authorization: Bearer " + tokenString, nil

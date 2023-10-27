@@ -21,13 +21,13 @@ func main() {
 	// load .env file
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		log.Fatalf("error loading .env file")
 	}
-
 	gormDB := db.Initialize()
+
 	defer func() {
-		db, _ := gormDB.DB()
-		err := db.Close()
+		mysqlDb, _ := gormDB.DB()
+		err := mysqlDb.Close()
 		if err != nil {
 			fmt.Print(err.Error())
 			return
