@@ -62,12 +62,12 @@ func DeleteUser(ctx context.Context, db *gorm.DB, id *uint) error {
 }
 
 func GetUserByEmail(ctx context.Context, db *gorm.DB, email string) (*User, error) {
-	var user User
-	result := db.WithContext(ctx).Where("email = ?", email).First(&user)
+	var userObj User
+	result := db.WithContext(ctx).Where("email = ?", email).First(&userObj)
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	return &user, nil
+	return &userObj, nil
 }
 
 func MakeNewUserObj(email, password string) *User {
