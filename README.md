@@ -15,7 +15,7 @@ server was generated from design.go
 ```shell
 $ make start-dev
 $ make start
-$ male stop
+$ make stop
 ```
 
 ##### ! Don't run it, only after changes in design.go you must run commands below:
